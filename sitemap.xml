@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://sapstroi.by/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://sapstroi.by/услуги</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sapstroi.by/объекты</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sapstroi.by/цены</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sapstroi.by/контакты</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sapstroi.by/могилев строительство</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sapstroi.by/укладка плитки</loc>
+    <priority>0.8</priority>
+    <url>
+    <loc>https://sapstroi.by/укладка плитки могилев</loc>
+    <priority>0.8</priority>
+      <url>
+    <loc>https://sapstroi.by/благоустройство</loc>
+    <priority>0.8</priority>
+        <url>
+    <loc>https://sapstroi.by/бордюры</loc>
+    <priority>0.8</priority>
+          <url>
+    <loc>https://sapstroi.by/установка</loc>
+    <priority>0.8</priority>
+  </url>
+  </url>
+  </url>
+  </url>
+  </url>
+</urlset>
