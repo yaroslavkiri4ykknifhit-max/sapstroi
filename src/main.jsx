@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const COMPANY = 'sapstroi';
+const COMPANY = 'Sapstroi';
 const PHONE = '+375 29 174-60-19';
 const PHONE_LINK = 'tel:+375291746019';
 const BASE_PRICE = 'от 27 BYN/м²';
@@ -21,14 +21,6 @@ const nav = [
   ['contacts', 'Контакты'],
 ];
 
-const bottomNav = [
-  ['top', 'Главная', '⌂'],
-  ['projects', 'Работы', '▦'],
-  ['services', 'Услуги', '▤'],
-  ['contacts', 'Контакты', '☎'],
-  ['quote', 'Цена', '₽'],
-];
-
 const benefits = [
   [BASE_PRICE, 'укладка и объекты'],
   [`Бордюры ${CURB_PRICE}`, 'отдельная цена'],
@@ -37,13 +29,13 @@ const benefits = [
 ];
 
 const services = [
-  { title: 'Двор под ключ', text: 'Делаем ровный двор: основание, плитка, бордюры и чистая сдача.' },
-  { title: 'Дорожки и площадки', text: 'Аккуратные проходы, зоны отдыха и подходы к дому без луж.' },
-  { title: 'Парковки и въезды', text: 'Усиленное основание под авто и правильный уклон для воды.' },
-  { title: 'Объекты застройщиков', text: 'Закрываем большие объемы: дворы, проходы, парковочные зоны.' },
+  { title: 'Двор под ключ', text: 'Готовим основание, укладываем тротуарную плитку, ставим бордюры и сдаем аккуратный двор.' },
+  { title: 'Дорожки и площадки', text: 'Делаем проходы, зоны отдыха и площадки в Могилеве с правильными уклонами и водоотводом.' },
+  { title: 'Парковки и въезды', text: 'Устраиваем усиленное основание под автомобиль и подбираем плитку под нагрузку.' },
+  { title: 'Объекты застройщиков', text: 'Закрываем большие объемы: дворы, проходы, парковочные зоны и благоустройство территории.' },
   {
     title: 'Установка бордюров',
-    text: 'Ставим бордюры для дорожек, площадок и участков. Цена зависит от объема и основания.',
+    text: 'Ставим бордюры для дорожек, площадок и участков. Цена зависит от объема, основания и подготовки.',
     price: CURB_PRICE,
     cta: 'Рассчитать стоимость',
     featured: true,
@@ -81,6 +73,14 @@ const faq = [
   ['Делаете под ключ?', 'Да: замер, расчет, основание, укладка и сдача объекта.'],
 ];
 
+const imageMeta = {
+  hero: { width: 1000, height: 571 },
+  yard: { width: 415, height: 560 },
+  parking: { width: 780, height: 780 },
+  path: { width: 1024, height: 768 },
+  work: { width: 1600, height: 1038 },
+};
+
 function scrollToId(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -89,13 +89,13 @@ function scrollToId(id) {
 function Logo() {
   return (
     <button className="logo" onClick={() => scrollToId('top')} aria-label={`${COMPANY} на главную`}>
-      <img src="/images/logo-sapstroi.svg" alt="SAPSTROI" />
+      <img src="/images/logo-sapstroi.svg" alt="Sapstroi — укладка тротуарной плитки в Могилеве" width="560" height="225" />
     </button>
   );
 }
 
 function CTA({ children = 'Получить расчет', onClick, secondary = false, className = '' }) {
-  return <button type="button" onClick={onClick} className={`btn ${secondary ? 'btn-secondary' : ''} ${className}`}>{children} <span>→</span></button>;
+  return <button type="button" onClick={onClick} className={`btn ${secondary ? 'btn-secondary' : ''} ${className}`}>{children} <span aria-hidden="true">→</span></button>;
 }
 
 function SectionTitle({ label, title, text }) {
@@ -122,13 +122,13 @@ function ServiceCard({ service }) {
   const { title, text, price, cta = 'Узнать цену', featured = false } = service;
 
   return (
-    <div className={`card ${featured ? 'featured-card' : ''}`}>
+    <article className={`card ${featured ? 'featured-card' : ''}`}>
       {featured && <span className="card-tag">популярно</span>}
       <h3>{title}</h3>
       <p>{text}</p>
       {price && <strong className="service-price"><span>Бордюры</span>{price}</strong>}
-      <button onClick={() => scrollToId('quote')}>{cta} →</button>
-    </div>
+      <button type="button" onClick={() => scrollToId('quote')} aria-label={`${cta}: ${title}`}>{cta} →</button>
+    </article>
   );
 }
 
@@ -136,16 +136,16 @@ function QuoteContact() {
   return (
     <div className="quote-contact">
       <span>Нужна консультация сразу?</span>
-      <a href={PHONE_LINK}>{PHONE}</a>
+      <a href={PHONE_LINK} aria-label={`Позвонить в ${COMPANY}: ${PHONE}`}>{PHONE}</a>
     </div>
   );
 }
 
 const visualLabels = {
-  yard: `Благоустройство территории ${COMPANY}`,
-  parking: `Благоустройство территории ${COMPANY}`,
-  path: `Установка бордюров ${COMPANY}`,
-  work: `Благоустройство территории ${COMPANY}`,
+  yard: `Укладка тротуарной плитки во дворе частного дома в Могилевской области`,
+  parking: `Укладка плитки на парковке у коттеджа в Могилеве`,
+  path: `Установка бордюров и укладка дорожек в Могилевской области`,
+  work: `Благоустройство территории застройщика в Могилеве`,
 };
 
 function PavingVisual({ title, price, variant = 'yard', image }) {
@@ -153,7 +153,7 @@ function PavingVisual({ title, price, variant = 'yard', image }) {
 
   return (
     <div className={`paving-visual ${variant}`} role="img" aria-label={visualLabels[variant]}>
-      {hasImage && <img src={image} alt={visualLabels[variant]} onError={() => setHasImage(false)} />}
+      {hasImage && <img src={image} alt={visualLabels[variant]} loading="lazy" decoding="async" width={imageMeta[variant]?.width} height={imageMeta[variant]?.height} onError={() => setHasImage(false)} />}
       <div className="visual-label"><b>{title}</b><small>{COMPANY} · {price}</small></div>
       <strong className="visual-price">{price}</strong>
       {!hasImage && <><div className="visual-block one" /><div className="visual-block two" /></>}
@@ -174,7 +174,6 @@ async function sendLeadToTelegram(data) {
   ].join('\n');
 
   if (!ready) {
-    console.info('Telegram message preview:', message);
     return { demo: true };
   }
 
@@ -197,27 +196,32 @@ function LeadForm({ compact = false }) {
     try {
       const result = await sendLeadToTelegram(form);
       setStatus(result.demo ? 'demo' : 'sent');
-    } catch (err) {
-      console.error(err);
+    } catch {
       setStatus('error');
     }
   }
 
   return (
-    <form className={`lead-form ${compact ? 'compact' : ''}`} onSubmit={submit}>
-      <input value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Ваше имя" />
-      <input value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="Телефон" />
+    <form className={`lead-form ${compact ? 'compact' : ''}`} onSubmit={submit} aria-label="Форма расчета стоимости укладки плитки">
+      <label className="sr-only" htmlFor="lead-name">Ваше имя</label>
+      <input id="lead-name" value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Ваше имя" autoComplete="name" />
+      <label className="sr-only" htmlFor="lead-phone">Телефон</label>
+      <input id="lead-phone" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="Телефон" inputMode="tel" autoComplete="tel" required />
       {!compact && <>
-        <select value={form.object} onChange={(e) => set('object', e.target.value)}>
+        <label className="sr-only" htmlFor="lead-object">Тип работ</label>
+        <select id="lead-object" value={form.object} onChange={(e) => set('object', e.target.value)}>
           <option value="">Что нужно сделать</option>
           <option>Двор под ключ</option><option>Дорожки</option><option>Парковка / въезд</option><option>Установка бордюров</option><option>Объект застройщика</option><option>Ремонт / перекладка</option>
         </select>
-        <input value={form.comment} onChange={(e) => set('comment', e.target.value)} placeholder="Площадь, район или фото" />
+        <label className="sr-only" htmlFor="lead-comment">Площадь, район или комментарий</label>
+        <input id="lead-comment" value={form.comment} onChange={(e) => set('comment', e.target.value)} placeholder="Площадь, район или фото" />
       </>}
-      <button>{status === 'sending' ? 'Отправляем...' : 'Рассчитать стоимость'}</button>
-      {status === 'sent' && <em className="ok">Заявка отправлена. Мы скоро свяжемся с вами.</em>}
-      {status === 'demo' && <em className="warn">Форма готова. Для Telegram укажите Bot Token и Chat ID.</em>}
-      {status === 'error' && <em className="err">Не удалось отправить заявку. Проверьте подключение Telegram.</em>}
+      <button type="submit" disabled={status === 'sending'}>{status === 'sending' ? 'Отправляем...' : 'Рассчитать стоимость'}</button>
+      <div className="form-status" aria-live="polite">
+        {status === 'sent' && <em className="ok">Заявка отправлена. Мы скоро свяжемся с вами.</em>}
+        {status === 'demo' && <em className="warn">Форма готова. Для Telegram укажите Bot Token и Chat ID.</em>}
+        {status === 'error' && <em className="err">Не удалось отправить заявку. Проверьте подключение Telegram.</em>}
+      </div>
     </form>
   );
 }
@@ -228,11 +232,11 @@ function Header() {
     <header className="header">
       <div className="container header-inner">
         <Logo />
-        <nav className="desktop-nav">{nav.map(([id, label]) => <button key={id} onClick={() => scrollToId(id)}>{label}</button>)}</nav>
-        <div className="header-cta"><a href={PHONE_LINK}>{PHONE}</a><CTA onClick={() => scrollToId('quote')}>Узнать цену</CTA></div>
-        <button className="menu-btn" onClick={() => setOpen(!open)}>{open ? '×' : '☰'}</button>
+        <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([id, label]) => <button type="button" key={id} onClick={() => scrollToId(id)}>{label}</button>)}</nav>
+        <div className="header-cta"><a href={PHONE_LINK} aria-label={`Позвонить в ${COMPANY}: ${PHONE}`}>{PHONE}</a><CTA onClick={() => scrollToId('quote')}>Узнать цену</CTA></div>
+        <button className="menu-btn" type="button" onClick={() => setOpen(!open)} aria-label={open ? 'Закрыть меню' : 'Открыть меню'} aria-expanded={open} aria-controls="mobile-menu">{open ? '×' : '☰'}</button>
       </div>
-      {open && <div className="mobile-menu">{nav.map(([id, label]) => <button key={id} onClick={() => { scrollToId(id); setOpen(false); }}>{label}</button>)}<CTA onClick={() => { scrollToId('quote'); setOpen(false); }}>Узнать цену</CTA></div>}
+      {open && <nav id="mobile-menu" className="mobile-menu" aria-label="Мобильная навигация">{nav.map(([id, label]) => <button type="button" key={id} onClick={() => { scrollToId(id); setOpen(false); }}>{label}</button>)}<CTA onClick={() => { scrollToId('quote'); setOpen(false); }}>Узнать цену</CTA></nav>}
     </header>
   );
 }
@@ -262,36 +266,38 @@ function App() {
           <div className="container hero-grid">
             <div className="hero-text">
               <p className="region">{REGION_FULL}</p>
-              <h1>Плитка, бордюры и благоустройство участка</h1>
-              <p className="lead">Сделаем аккуратный двор, дорожки или парковку под ключ. Быстро считаем цену, объясняем этапы и сдаем готовый результат.</p>
+              <h1>Укладка тротуарной плитки в Могилеве</h1>
+              <p className="lead">Sapstroi выполняет укладку тротуарной плитки, установку бордюров и благоустройство участков в Могилеве и Могилевской области. Работаем с дворами, дорожками, площадками, частными участками и объектами под ключ. Рассчитываем стоимость заранее и помогаем подобрать оптимальное решение под задачу.</p>
               <PriceHighlights />
               <div className="actions"><CTA onClick={() => scrollToId('quote')}>Рассчитать стоимость</CTA><CTA secondary onClick={() => scrollToId('projects')}>Посмотреть работы</CTA></div>
               <p className="trust-line">Работаем своими мастерами · показываем смету заранее · оплата наличными и безналично</p>
             </div>
-            <div className="hero-photo"><img src="/images/hero-main.png" alt={`Благоустройство территории ${COMPANY}`} /></div>
+            <div className="hero-photo"><img src="/images/hero-main.png" alt="Укладка тротуарной плитки и благоустройство участка в Могилеве" width={imageMeta.hero.width} height={imageMeta.hero.height} fetchPriority="high" decoding="async" /></div>
           </div>
         </section>
 
         <section className="stats"><div className="container stats-grid">{benefits.map(([v, t]) => <div className="stat" key={v}><b>{v}</b><span>{t}</span></div>)}</div></section>
 
-        <section id="services" className="section"><div className="container"><SectionTitle label="Услуги" title="Что можно заказать" text="Основные работы для частных участков, коттеджей и территорий застройщиков." /><div className="cards">{services.map((service) => <ServiceCard key={service.title} service={service} />)}</div></div></section>
+        <section id="services" className="section"><div className="container"><SectionTitle label="Услуги" title="Благоустройство участков под ключ" text="Выполняем строительные работы в Могилеве: готовим основание, укладываем плитку, ставим бордюры и приводим территорию в аккуратный вид после завершения работ." /><div className="cards">{services.map((service) => <ServiceCard key={service.title} service={service} />)}</div></div></section>
+
+        <section className="section curb-section"><div className="container curb-grid"><div><SectionTitle label="Бордюры" title="Установка бордюров в Могилеве" text={`Бордюры помогают удерживать форму дорожек, площадок и парковок, защищают плитку от расползания и делают участок визуально завершенным. Стоимость установки — ${CURB_PRICE}, точный расчет зависит от объема, основания и подготовки.`} /><CTA onClick={() => scrollToId('quote')}>Рассчитать бордюры</CTA></div><div className="seo-card"><h3>Что входит в работу</h3><p>Разметка, подготовка основания, выставление бордюров по уровню, укрепление и чистая сдача участка. Подскажем, где бордюр обязателен, а где можно сэкономить без потери качества.</p></div></div></section>
 
         <section id="projects" className="section soft"><div className="container"><SectionTitle label="Работы" title="Примеры объектов" text="Ориентиры по площади, срокам и цене. Точный расчет делаем после замера." /><div className="projects-grid">{projects.map((item) => <ProjectCard key={item[0]} item={item} />)}</div></div></section>
 
-        <section id="process" className="section"><div className="container"><SectionTitle label="Этапы" title="От заявки до готового двора" text="Без лишней бюрократии: быстро согласуем задачу и переходим к делу." /><div className="process-grid">{process.map((step, i) => <div className="step" key={step}><b>{i + 1}</b><span>{step}</span></div>)}</div></div></section>
+        <section id="process" className="section"><div className="container"><SectionTitle label="Этапы" title="Как проходит работа" text="Без лишней бюрократии: быстро согласуем задачу, считаем стоимость и переходим к благоустройству территории." /><div className="process-grid">{process.map((step, i) => <div className="step" key={step}><b>{i + 1}</b><span>{step}</span></div>)}</div></div></section>
 
-        <section className="section soft"><div className="container"><SectionTitle label={`Почему ${COMPANY}`} title="Работа без сюрпризов" /><div className="reason-grid">{reasons.map(([title, text]) => <div className="reason" key={title}><h3>{title}</h3><p>{text}</p></div>)}</div></div></section>
+        <section className="section soft"><div className="container"><SectionTitle label={`Почему ${COMPANY}`} title="Почему выбирают Sapstroi" text="Клиенты обращаются к нам за понятным расчетом, аккуратной укладкой плитки и спокойным ведением работ на объекте." /><div className="reason-grid">{reasons.map(([title, text]) => <article className="reason" key={title}><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
 
-        <section className="section"><div className="container"><SectionTitle label="Отзывы" title="Что говорят клиенты" /><div className="reviews">{reviews.map(([name, object, text]) => <div className="review" key={name}><p>“{text}”</p><b>{name}</b><span>{object}</span></div>)}</div></div></section>
+        <section className="section"><div className="container"><SectionTitle label="Отзывы" title="Что говорят клиенты" /><div className="reviews">{reviews.map(([name, object, text]) => <article className="review" key={name}><p>“{text}”</p><b>{name}</b><span>{object}</span></article>)}</div></div></section>
 
-        <section id="quote" className="section soft"><div className="container quote-box"><div><SectionTitle label="Расчет стоимости" title="Посчитаем ваш объект" text={`Оставьте контакты — уточним площадь и основание. Объекты — ${BASE_PRICE}, бордюры — ${CURB_PRICE}.`} /><ul className="check-list"><li>Без навязчивых звонков</li><li>Понятная смета до старта</li><li>Наличный и безналичный расчет</li></ul><QuoteContact /></div><LeadForm /></div></section>
+        <section id="quote" className="section soft"><div className="container quote-box"><div><SectionTitle label="Расчет стоимости" title="Цены на работы" text={`Оставьте контакты — уточним площадь, основание, район и подберем оптимальное решение. Укладка тротуарной плитки в Могилеве — ${BASE_PRICE}, бордюры — ${CURB_PRICE}.`} /><ul className="price-list"><li><span>Укладка плитки и объекты</span><b>{BASE_PRICE}</b></li><li><span>Установка бордюров</span><b>{CURB_PRICE}</b></li><li><span>Замер и смета</span><b>до старта</b></li></ul><ul className="check-list"><li>Без навязчивых звонков</li><li>Понятная смета до старта</li><li>Наличный и безналичный расчет</li></ul><QuoteContact /></div><LeadForm /></div></section>
 
-        <section className="section"><div className="container"><SectionTitle label="FAQ" title="Частые вопросы" /><div className="faq">{faq.map(([q, a]) => <div key={q}><h3>{q}</h3><p>{a}</p></div>)}</div></div></section>
+        <section className="section"><div className="container"><SectionTitle label="FAQ" title="Частые вопросы" /><div className="faq">{faq.map(([q, a]) => <article key={q}><h3>{q}</h3><p>{a}</p></article>)}</div></div></section>
       </main>
 
-      <footer id="contacts" className="footer"><div className="container footer-grid"><div><Logo /><p>Благоустройство, плитка и бордюры под ключ для частных клиентов и застройщиков.</p></div><div><a href={PHONE_LINK}>{PHONE}</a><p>{REGION_FULL}</p><p>Наличный и безналичный расчет</p><p>Telegram / Viber / WhatsApp</p></div><div><CTA onClick={() => scrollToId('quote')}>Получить расчет</CTA><CTA secondary onClick={() => scrollToId('projects')}>Посмотреть работы</CTA><small>© 2026 {COMPANY}</small></div></div><div className="container footer-meta"><span>дизайн / разработка веб-сайта: Ярослав Киричук</span></div></footer>
+      <footer id="contacts" className="footer"><div className="container footer-grid"><div><Logo /><p>Укладка тротуарной плитки, установка бордюров и благоустройство территории под ключ для частных клиентов и застройщиков.</p></div><div><a href={PHONE_LINK} aria-label={`Позвонить в ${COMPANY}: ${PHONE}`}>{PHONE}</a><p>{REGION_FULL}</p><p>Наличный и безналичный расчет</p><p>Telegram / Viber / WhatsApp</p></div><div><CTA onClick={() => scrollToId('quote')}>Получить расчет</CTA><CTA secondary onClick={() => scrollToId('projects')}>Посмотреть работы</CTA><small>© 2026 {COMPANY}</small></div></div><div className="container footer-meta"><span>дизайн / разработка веб-сайта: Ярослав Киричук</span></div></footer>
 
-      <nav className="bottom-nav">{bottomNav.map(([id, label, icon]) => <button key={id} onClick={() => scrollToId(id)}><span>{icon}</span><b>{label}</b></button>)}</nav>
+      <CTA className="mobile-sticky-cta" onClick={() => scrollToId('quote')}>Получить консультацию</CTA>
     </div>
   );
 }
