@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
@@ -8,6 +8,8 @@ const PHONE_LINK = 'tel:+375291746019';
 const BASE_PRICE = 'от 27 BYN/м²';
 const CURB_PRICE = 'от 10 BYN';
 const REGION_FULL = 'Могилев и область · выезд по Беларуси';
+const SITE_URL = 'https://sapstroi.by';
+const CURB_PATH = '/ustanovka-bordyurov/';
 
 // Telegram-заявки: замените на реальные данные бота владельца.
 // Важно: для боевого сайта лучше отправлять через backend, чтобы token не был виден в браузере.
@@ -15,10 +17,11 @@ const TELEGRAM_BOT_TOKEN = '8485516200:AAEmWPckhyNFkgv-ukWoheijAQgkq7ZFKk4';
 const TELEGRAM_CHAT_ID = '8649177202';
 
 const nav = [
-  ['services', 'Услуги'],
-  ['projects', 'Работы'],
-  ['process', 'Этапы'],
-  ['contacts', 'Контакты'],
+  { href: '/#services', label: 'Услуги' },
+  { href: CURB_PATH, label: 'Бордюры' },
+  { href: '/#projects', label: 'Работы' },
+  { href: '/#process', label: 'Этапы' },
+  { href: '/#contacts', label: 'Контакты' },
 ];
 
 const benefits = [
@@ -37,10 +40,40 @@ const services = [
     title: 'Установка бордюров',
     text: 'Ставим бордюры для дорожек, площадок и участков. Цена зависит от объема, основания и подготовки.',
     price: CURB_PRICE,
-    cta: 'Рассчитать стоимость',
+    cta: 'Подробнее о бордюрах',
     featured: true,
+    href: CURB_PATH,
   },
   { title: 'Ремонт плитки', text: 'Убираем просадки, меняем проблемные зоны и возвращаем аккуратный вид.' },
+];
+
+const curbBenefits = [
+  ['от 10 BYN', 'стоимость установки бордюров'],
+  ['точный уровень', 'ровная линия дорожек и площадок'],
+  ['правильное основание', 'бордюр не уходит после сезона'],
+  ['под ключ', 'разметка, установка и чистая сдача'],
+];
+
+const curbUseCases = [
+  ['Дорожки у дома', 'Бордюр держит край плитки, отделяет покрытие от газона и не дает дорожкам расползаться.'],
+  ['Дворы и площадки', 'Помогает сохранить геометрию покрытия, аккуратно оформить въезд, парковку или зону отдыха.'],
+  ['Частные участки', 'Закрывает перепады, помогает организовать водоотвод и делает благоустройство визуально завершенным.'],
+  ['Ремонт плитки', 'При просадках и переделках бордюр часто нужен, чтобы новое покрытие держалось ровно.'],
+];
+
+const curbSteps = [
+  'Осматриваем участок и основание',
+  'Согласуем линию, высоту и объем',
+  'Готовим основание под бордюр',
+  'Выставляем бордюры по уровню',
+  'Укрепляем, проверяем примыкания и сдаем работу',
+];
+
+const curbFaq = [
+  ['Сколько стоит установка бордюров в Могилеве?', `Ориентир — ${CURB_PRICE}. Точная цена зависит от метража, основания, доступа к участку и подготовки.`],
+  ['Можно заказать только бордюры без плитки?', 'Да. Можно заказать отдельную установку бордюров, ремонт края дорожки или подготовку участка под будущую укладку плитки.'],
+  ['Зачем нужен бордюр при укладке плитки?', 'Он фиксирует край покрытия, снижает риск расползания плитки и помогает сохранить ровную линию дорожек, площадок и парковок.'],
+  ['Где работаете?', 'Могилев, Могилевская область и крупные объекты по Беларуси.'],
 ];
 
 const projects = [
@@ -83,14 +116,18 @@ const imageMeta = {
 
 function scrollToId(id) {
   const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  window.location.href = `/#${id}`;
 }
 
 function Logo() {
   return (
-    <button className="logo" onClick={() => scrollToId('top')} aria-label={`${COMPANY} на главную`}>
+    <a className="logo" href="/" aria-label={`${COMPANY} на главную`}>
       <img src="/images/logo-sapstroi.svg" alt="Sapstroi — укладка тротуарной плитки в Могилеве" width="560" height="225" />
-    </button>
+    </a>
   );
 }
 
@@ -119,7 +156,7 @@ function PriceHighlights() {
 }
 
 function ServiceCard({ service }) {
-  const { title, text, price, cta = 'Узнать цену', featured = false } = service;
+  const { title, text, price, cta = 'Узнать цену', featured = false, href } = service;
 
   return (
     <article className={`card ${featured ? 'featured-card' : ''}`}>
@@ -127,7 +164,9 @@ function ServiceCard({ service }) {
       <h3>{title}</h3>
       <p>{text}</p>
       {price && <strong className="service-price"><span>Бордюры</span>{price}</strong>}
-      <button type="button" onClick={() => scrollToId('quote')} aria-label={`${cta}: ${title}`}>{cta} →</button>
+      {href
+        ? <a className="card-link" href={href} aria-label={`${cta}: ${title}`}>{cta} →</a>
+        : <button type="button" onClick={() => scrollToId('quote')} aria-label={`${cta}: ${title}`}>{cta} →</button>}
     </article>
   );
 }
@@ -185,8 +224,8 @@ async function sendLeadToTelegram(data) {
   return res.json();
 }
 
-function LeadForm({ compact = false }) {
-  const [form, setForm] = useState({ name: '', phone: '', object: '', comment: '' });
+function LeadForm({ compact = false, defaultObject = '' }) {
+  const [form, setForm] = useState({ name: '', phone: '', object: defaultObject, comment: '' });
   const [status, setStatus] = useState('idle');
   const set = (key, value) => setForm((old) => ({ ...old, [key]: value }));
 
@@ -232,11 +271,11 @@ function Header() {
     <header className="header">
       <div className="container header-inner">
         <Logo />
-        <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([id, label]) => <button type="button" key={id} onClick={() => scrollToId(id)}>{label}</button>)}</nav>
+        <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(({ href, label }) => <a key={href} href={href}>{label}</a>)}</nav>
         <div className="header-cta"><a href={PHONE_LINK} aria-label={`Позвонить в ${COMPANY}: ${PHONE}`}>{PHONE}</a><CTA onClick={() => scrollToId('quote')}>Узнать цену</CTA></div>
         <button className="menu-btn" type="button" onClick={() => setOpen(!open)} aria-label={open ? 'Закрыть меню' : 'Открыть меню'} aria-expanded={open} aria-controls="mobile-menu">{open ? '×' : '☰'}</button>
       </div>
-      {open && <nav id="mobile-menu" className="mobile-menu" aria-label="Мобильная навигация">{nav.map(([id, label]) => <button type="button" key={id} onClick={() => { scrollToId(id); setOpen(false); }}>{label}</button>)}<CTA onClick={() => { scrollToId('quote'); setOpen(false); }}>Узнать цену</CTA></nav>}
+      {open && <nav id="mobile-menu" className="mobile-menu" aria-label="Мобильная навигация">{nav.map(({ href, label }) => <a key={href} href={href} onClick={() => setOpen(false)}>{label}</a>)}<CTA onClick={() => { scrollToId('quote'); setOpen(false); }}>Узнать цену</CTA></nav>}
     </header>
   );
 }
@@ -258,6 +297,66 @@ function ProjectCard({ item }) {
 }
 
 function App() {
+  const page = getCurrentPage();
+
+  usePageMeta(page);
+
+  useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.slice(1);
+      window.requestAnimationFrame(() => scrollToId(id));
+    }
+  }, [page]);
+
+  if (page === 'curbs') {
+    return <CurbPage />;
+  }
+
+  return <HomePage />;
+}
+
+function getCurrentPage() {
+  const path = window.location.pathname.replace(/\/+$/, '');
+  return path === '/ustanovka-bordyurov' ? 'curbs' : 'home';
+}
+
+function setMeta(selector, value) {
+  const element = document.head.querySelector(selector);
+  if (element) element.setAttribute('content', value);
+}
+
+function usePageMeta(page) {
+  useEffect(() => {
+    const meta = page === 'curbs'
+      ? {
+          title: 'Установка бордюров в Могилеве от 10 BYN — Sapstroi',
+          description: 'Установка бордюров в Могилеве и Могилевской области: дорожки, площадки, дворы и благоустройство участков. Бордюры от 10 BYN, расчет стоимости заранее.',
+          canonical: `${SITE_URL}${CURB_PATH}`,
+          ogTitle: 'Установка бордюров в Могилеве от 10 BYN — Sapstroi',
+          ogDescription: 'Ставим бордюры для дорожек, площадок и участков в Могилеве. Аккуратная установка, понятная смета и консультация.',
+        }
+      : {
+          title: 'Укладка тротуарной плитки в Могилеве — Sapstroi',
+          description: 'Укладка тротуарной плитки в Могилеве, установка бордюров и благоустройство участков под ключ. Расчет стоимости, аккуратные работы, бордюры от 10 BYN.',
+          canonical: `${SITE_URL}/`,
+          ogTitle: 'Укладка тротуарной плитки в Могилеве — Sapstroi',
+          ogDescription: 'Укладка плитки, установка бордюров и благоустройство участков в Могилеве. Быстрый расчет стоимости и консультация.',
+        };
+
+    document.title = meta.title;
+    setMeta('meta[name="description"]', meta.description);
+    setMeta('meta[property="og:title"]', meta.ogTitle);
+    setMeta('meta[property="og:description"]', meta.ogDescription);
+    setMeta('meta[property="og:url"]', meta.canonical);
+    setMeta('meta[name="twitter:title"]', meta.ogTitle);
+    setMeta('meta[name="twitter:description"]', meta.ogDescription);
+
+    const canonical = document.head.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute('href', meta.canonical);
+  }, [page]);
+}
+
+function HomePage() {
   return (
     <div id="top">
       <Header />
@@ -280,8 +379,6 @@ function App() {
 
         <section id="services" className="section"><div className="container"><SectionTitle label="Услуги" title="Благоустройство участков под ключ" text="Выполняем строительные работы в Могилеве: готовим основание, укладываем плитку, ставим бордюры и приводим территорию в аккуратный вид после завершения работ." /><div className="cards">{services.map((service) => <ServiceCard key={service.title} service={service} />)}</div></div></section>
 
-        <section className="section curb-section"><div className="container curb-grid"><div><SectionTitle label="Бордюры" title="Установка бордюров в Могилеве" text={`Бордюры помогают удерживать форму дорожек, площадок и парковок, защищают плитку от расползания и делают участок визуально завершенным. Стоимость установки — ${CURB_PRICE}, точный расчет зависит от объема, основания и подготовки.`} /><CTA onClick={() => scrollToId('quote')}>Рассчитать бордюры</CTA></div><div className="seo-card"><h3>Что входит в работу</h3><p>Разметка, подготовка основания, выставление бордюров по уровню, укрепление и чистая сдача участка. Подскажем, где бордюр обязателен, а где можно сэкономить без потери качества.</p></div></div></section>
-
         <section id="projects" className="section soft"><div className="container"><SectionTitle label="Работы" title="Примеры объектов" text="Ориентиры по площади, срокам и цене. Точный расчет делаем после замера." /><div className="projects-grid">{projects.map((item) => <ProjectCard key={item[0]} item={item} />)}</div></div></section>
 
         <section id="process" className="section"><div className="container"><SectionTitle label="Этапы" title="Как проходит работа" text="Без лишней бюрократии: быстро согласуем задачу, считаем стоимость и переходим к благоустройству территории." /><div className="process-grid">{process.map((step, i) => <div className="step" key={step}><b>{i + 1}</b><span>{step}</span></div>)}</div></div></section>
@@ -296,6 +393,44 @@ function App() {
       </main>
 
       <footer id="contacts" className="footer"><div className="container footer-grid"><div><Logo /><p>Укладка тротуарной плитки, установка бордюров и благоустройство территории под ключ для частных клиентов и застройщиков.</p></div><div><a href={PHONE_LINK} aria-label={`Позвонить в ${COMPANY}: ${PHONE}`}>{PHONE}</a><p>{REGION_FULL}</p><p>Наличный и безналичный расчет</p><p>Telegram / Viber / WhatsApp</p></div><div><CTA onClick={() => scrollToId('quote')}>Получить расчет</CTA><CTA secondary onClick={() => scrollToId('projects')}>Посмотреть работы</CTA><small>© 2026 {COMPANY}</small></div></div><div className="container footer-meta"><span>дизайн / разработка веб-сайта: Ярослав Киричук</span></div></footer>
+
+      <CTA className="mobile-sticky-cta" onClick={() => scrollToId('quote')}>Получить консультацию</CTA>
+    </div>
+  );
+}
+
+function CurbPage() {
+  return (
+    <div id="top" className="service-page curb-page">
+      <Header />
+      <main>
+        <section className="service-hero">
+          <div className="container service-hero-grid">
+            <div>
+              <nav className="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span aria-hidden="true">/</span><span>Установка бордюров</span></nav>
+              <p className="region">{REGION_FULL}</p>
+              <h1>Установка бордюров в Могилеве</h1>
+              <p className="lead">Sapstroi устанавливает бордюры для дорожек, площадок, парковок и частных участков в Могилеве и Могилевской области. Работаем с разметкой, подготовкой основания, выставлением по уровню и аккуратной сдачей участка. Стоимость установки бордюров — {CURB_PRICE}.</p>
+              <div className="actions"><CTA onClick={() => scrollToId('quote')}>Рассчитать бордюры</CTA><CTA secondary onClick={() => scrollToId('curb-process')}>Как проходит работа</CTA></div>
+            </div>
+            <div className="hero-photo service-photo"><img src="/images/project-paths.png" alt="Установка бордюров и укладка дорожек в Могилеве" width={imageMeta.path.width} height={imageMeta.path.height} decoding="async" /></div>
+          </div>
+        </section>
+
+        <section className="stats"><div className="container stats-grid">{curbBenefits.map(([v, t]) => <div className="stat" key={v}><b>{v}</b><span>{t}</span></div>)}</div></section>
+
+        <section className="section"><div className="container"><SectionTitle label="Когда нужны" title="Где применяются бордюры" text="Бордюр фиксирует край покрытия, помогает держать геометрию участка и делает благоустройство территории аккуратным." /><div className="detail-grid">{curbUseCases.map(([title, text]) => <article className="detail-card" key={title}><h2>{title}</h2><p>{text}</p></article>)}</div></div></section>
+
+        <section className="section soft"><div className="container curb-grid"><div><SectionTitle label="Состав работ" title="Что входит в установку бордюров" text="Перед началом оцениваем грунт, основание, перепады и примыкания. После этого считаем метраж и предлагаем решение под задачу: от отдельной линии бордюра до полного благоустройства участка." /><ul className="check-list service-list"><li>Разметка линии и согласование высоты</li><li>Подготовка траншеи и основания</li><li>Выставление бордюров по уровню</li><li>Укрепление, примыкания и чистая сдача</li></ul></div><div className="seo-card price-card"><h2>Цена установки</h2><strong>{CURB_PRICE}</strong><p>Финальная стоимость зависит от длины, состояния основания, доступа к участку и дополнительных работ. Смету согласуем заранее.</p><CTA onClick={() => scrollToId('quote')}>Получить расчет</CTA></div></div></section>
+
+        <section id="curb-process" className="section"><div className="container"><SectionTitle label="Этапы" title="Как проходит работа" text="Процесс понятный: сначала оцениваем участок, затем считаем стоимость и только после согласования выходим на объект." /><div className="process-grid service-process">{curbSteps.map((step, i) => <div className="step" key={step}><b>{i + 1}</b><span>{step}</span></div>)}</div></div></section>
+
+        <section id="quote" className="section soft"><div className="container quote-box"><div><SectionTitle label="Расчет стоимости" title="Рассчитаем установку бордюров" text={`Оставьте контакты — уточним метраж, основание и район. Ориентир по установке бордюров — ${CURB_PRICE}.`} /><ul className="price-list"><li><span>Установка бордюров</span><b>{CURB_PRICE}</b></li><li><span>Замер и смета</span><b>до старта</b></li><li><span>Регион</span><b>Могилев и область</b></li></ul><QuoteContact /></div><LeadForm defaultObject="Установка бордюров" /></div></section>
+
+        <section className="section"><div className="container"><SectionTitle label="FAQ" title="Вопросы по бордюрам" /><div className="faq">{curbFaq.map(([q, a]) => <article key={q}><h2>{q}</h2><p>{a}</p></article>)}</div></div></section>
+      </main>
+
+      <footer id="contacts" className="footer"><div className="container footer-grid"><div><Logo /><p>Установка бордюров, укладка тротуарной плитки и благоустройство территории под ключ.</p></div><div><a href={PHONE_LINK} aria-label={`Позвонить в ${COMPANY}: ${PHONE}`}>{PHONE}</a><p>{REGION_FULL}</p><p>Наличный и безналичный расчет</p><p>Telegram / Viber / WhatsApp</p></div><div><CTA onClick={() => scrollToId('quote')}>Получить расчет</CTA><CTA secondary onClick={() => { window.location.href = '/#projects'; }}>Посмотреть работы</CTA><small>© 2026 {COMPANY}</small></div></div><div className="container footer-meta"><span>дизайн / разработка веб-сайта: Ярослав Киричук</span></div></footer>
 
       <CTA className="mobile-sticky-cta" onClick={() => scrollToId('quote')}>Получить консультацию</CTA>
     </div>
